@@ -1,22 +1,20 @@
-import { useState, useEffect } from 'react'
-import { Tabbar, TabbarLink, Card, List, ListInput, ListButton } from 'konsta/react'
-import API from '../../lib/web3/api'
+import { useState } from 'react'
+import { Tabbar, TabbarLink, Card } from 'konsta/react'
+import { BscScan } from '@jpmonette/bscscan'
+const client = new BscScan({
+    apikey: 'DUM4NURZNNQNX44R72UXNHHHNC27GMAYS3',
+    baseUrl: process.env.NODE_ENV === 'production' ? 'https://api.bscscan.com/api?' : 'https://api-testnet.bscscan.com/api?'
+})
 export default function Account({ account, network }) {
     const [tab, setTab] = useState({
         current: 0,
         account: {
             balance: undefined,
             transactions: undefined,
-            bep721_transafer_events: undefined
+            nft_transactions: undefined
         },
         contractAddress: undefined
     })
-    const fetchData = () => {
-        API.bep721_transfer_events(account, tab.contractAddress, network).then((res) => {
-            setTab({ ...tab, account: { ...tab.account, bep721_transafer_events: res.result } })
-        })
-    }
-    console.log(tab)
     return (
         <>
             <div className='flex flex-col gap-3 p-2 pb-18'>
@@ -107,61 +105,41 @@ export default function Account({ account, network }) {
 
                 {/* BEP721 Transfer Events */}
                 {tab.current === 3 && (
-                    <>
+                    tab.account.nft_transactions.map((data, i) => (
                         <Card
-                            className='animate__animated animate__fadeInUp ms-500'
                             margin='m-0'
-                            header="Contract Address">
-                            <List
-                                margin='m-0'
-                                hairlines={false}>
-                                <ListInput
-                                    floatingLabel
-                                    label="Enter Contract Address"
-                                    placeholder="Enter Contract Address"
-                                    onInput={(e) => setTab({ ...tab, contractAddress: e.target.value })} />
-                                <ListButton
-                                    className='mx-3'
-                                    onClick={fetchData}>Fetch Data</ListButton>
-                            </List>
-                        </Card>
-                        {/* Display data */}
-                        {tab.account.bep721_transafer_events !== undefined && tab.account.bep721_transafer_events.map((data, i) => (
-                            <Card
-                                margin='m-0'
-                                className='animate__animated animate__fadeInUp ms-500'
-                                key={i}
-                                header={
-                                    <div className='flex justify-between'>
-                                        <span>Block Number</span>
-                                        <span className='text-gray-300'>{data.blockNumber}</span>
-                                    </div>
-                                }>
-                                <div className='flex flex-col gap-4'>
-                                    <div className='flex justify-between'>
-                                        <span>From</span>
-                                        <span className='text-gray-300'>{data.from}</span>
-                                    </div>
-                                    <div className='flex justify-between'>
-                                        <span>From</span>
-                                        <span className='text-gray-300'>{data.to}</span>
-                                    </div>
-                                    <div className='flex justify-between'>
-                                        <span>Token Name</span>
-                                        <span className='text-gray-300'>{data.tokenName}</span>
-                                    </div>
-                                    <div className='flex justify-between'>
-                                        <span>Token Symbol</span>
-                                        <span className='text-gray-300'>{data.tokenSymbol}</span>
-                                    </div>
-                                    <div className='flex justify-between'>
-                                        <span>Token ID</span>
-                                        <span className='text-gray-300'>{data.tokenID}</span>
-                                    </div>
+                            className='animate__animated animate__fadeInUp ms-500'
+                            key={i}
+                            header={
+                                <div className='flex justify-between'>
+                                    <span>Block Number</span>
+                                    <span className='text-gray-300'>{data.blockNumber}</span>
                                 </div>
-                            </Card>
-                        ))}
-                    </>
+                            }>
+                            <div className='flex flex-col gap-4'>
+                                <div className='flex justify-between'>
+                                    <span>From</span>
+                                    <span className='text-gray-300'>{data.from}</span>
+                                </div>
+                                <div className='flex justify-between'>
+                                    <span>From</span>
+                                    <span className='text-gray-300'>{data.to}</span>
+                                </div>
+                                <div className='flex justify-between'>
+                                    <span>Token Name</span>
+                                    <span className='text-gray-300'>{data.tokenName}</span>
+                                </div>
+                                <div className='flex justify-between'>
+                                    <span>Token Symbol</span>
+                                    <span className='text-gray-300'>{data.tokenSymbol}</span>
+                                </div>
+                                <div className='flex justify-between'>
+                                    <span>Token ID</span>
+                                    <span className='text-gray-300'>{data.tokenID}</span>
+                                </div>
+                            </div>
+                        </Card>
+                    ))
                 )}
             </div>
             <Tabbar
@@ -169,24 +147,24 @@ export default function Account({ account, network }) {
                 <TabbarLink
                     active={tab.current === 1}
                     onClick={() => {
-                        API.balance(account, network).then((res) => {
-                            console.log(res)
-                            setTab({ ...tab, current: 1, account: { ...tab.account, balance: res.result } })
+                        client.accounts.getBalance({ address: account }).then((res) => {
+                            setTab({ ...tab, current: 1, account: { ...tab.account, balance: res } })
                         })
                     }}>Wallet Balance</TabbarLink>
                 <TabbarLink
                     active={tab.current === 2}
                     onClick={() => {
-                        API.transactions(account, network).then((res) => {
-                            console.log(res)
-                            setTab({ ...tab, current: 2, account: { ...tab.account, transactions: res.result } })
+                        client.accounts.getTxList({ address: account }).then((res) => {
+                            setTab({ ...tab, current: 2, account: { ...tab.account, transactions: res } })
                         })
                     }}>Transactions</TabbarLink>
                 <TabbarLink
                     active={tab.current === 3}
                     onClick={() => {
-                        setTab({ ...tab, current: 3 })
-                    }}>BEP721 Transfer Events</TabbarLink>
+                        client.accounts.getTokenNFTTx({ address: account }).then((res) => {
+                            setTab({ ...tab, current: 3, account: { ...tab.account, nft_transactions: res } })
+                        })
+                    }}>NFT Transactions</TabbarLink>
             </Tabbar>
         </>
     )

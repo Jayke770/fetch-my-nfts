@@ -238,6 +238,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@jpmonette/bscscan@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@jpmonette/bscscan/-/bscscan-0.2.4.tgz#d0d6b2ec0aa574fc8154c9e11320d00e9e2a76f7"
+  integrity sha512-Rn6nZw4fpnG+clyo8QQsmP4F1+ltoR7Rdd2FVKLf9uxvVF+qaqONqLcYnsmLUjpTq2o7XqYaufF+USJ8d5ntIw==
+
 "@next/env@12.1.6":
   version "12.1.6"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.1.6.tgz#5f44823a78335355f00f1687cfc4f1dafa3eca08"

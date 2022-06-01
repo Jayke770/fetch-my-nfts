@@ -1,16 +1,45 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base; 
+@tailwind utilities; 
+@tailwind components;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+::-webkit-scrollbar {
+	@apply w-1 h-1;
+}
+::-webkit-scrollbar-track {
+	@apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+	@apply bg-primary cursor-pointer;
+}
+.ms-200 {
+    --animate-duration: 200ms;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.ms-300 {
+    --animate-duration: 300ms;
 }
 
-* {
-  box-sizing: border-box;
+.ms-400 {
+    --animate-duration: 400ms;
+}
+
+.ms-500 {
+    --animate-duration: 500ms;
+}
+
+.ms-600{
+    --animate-duration: 600ms
+}
+
+.ms-700{
+    --animate-duration: 700ms
+}
+.ms-800{
+    --animate-duration: 800ms
+}
+.ms-900{
+    --animate-duration: 900ms
+}
+.ms-slow{
+    --animate-duration: 2000ms
 }

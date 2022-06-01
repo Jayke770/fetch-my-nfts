@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Tabbar, TabbarLink, Card } from 'konsta/react'
 import { BscScan } from '@jpmonette/bscscan'
 const client = new BscScan({
-    apikey: 'DUM4NURZNNQNX44R72UXNHHHNC27GMAYS3',
+    apikey: process.env.BSCSCAN_API_KEY,
     baseUrl: process.env.NODE_ENV === 'production' ? 'https://api.bscscan.com/api?' : 'https://api-testnet.bscscan.com/api?'
 })
 export default function Account({ account, network }) {
